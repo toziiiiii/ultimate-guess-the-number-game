@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        input[type="number"] {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>Guess the Number Game</h1>
+        <p>I'm thinking of a number between 1 and 100. You have 10 attempts to guess it!</p>
+        <input type="number" id="user-guess" placeholder="Enter your guess" min="1" max="100">
+        <button id="submit-guess">Submit Guess</button>
+        <div class="message" id="message"></div>
+        <div class="message" id="attempts-left"></div>
+    </div>
+
+    <script>
+        let numberToGuess = Math.floor(Math.random() * 100) + 1;
+        let maxAttempts = 10;
+        let attempts = 0;
+
+        const userGuessInput = document.getElementById('user-guess');
+        const submitButton = document.getElementById('submit-guess');
+        const messageDiv = document.getElementById('message');
+        const attemptsLeftDiv = document.getElementById('attempts-left');
+
+        function updateMessage(message) {
+            messageDiv.textContent = message;
+        }
+
+        function updateAttemptsLeft() {
+            attemptsLeftDiv.textContent = `Attempts left: ${maxAttempts - attempts}`;
+        }
+
+        submitButton.addEventListener('click', () => {
+            const guess = parseInt(userGuessInput.value);
+
+            if (isNaN(guess)) {
+                updateMessage('Please enter a valid number!');
+                return;
+            }
+
+            attempts++;
+
+            if (guess === numberToGuess) {
+                updateMessage(`🎉 Congratulations! You guessed it in ${attempts} attempts!`);
+            } else if (guess < numberToGuess) {
+                updateMessage('Too low! Try again.');
+            } else {
+                updateMessage('Too high! Try again.');
+            }
+
+            updateAttemptsLeft();
+
+            if (attempts === maxAttempts) {
+                if (guess !== numberToGuess) {
+                    updateMessage(`Game Over! The correct number was ${numberToGuess}.`);
+                }
+                submitButton.disabled = true;
+            }
+
+            userGuessInput.value = ''; // Clear the input field
+        });
+
+        updateAttemptsLeft();
+    </script>
+
+</body>
+</html>
